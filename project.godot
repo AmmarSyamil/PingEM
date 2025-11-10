@@ -11,5 +11,28 @@ config_version=5
 [application]
 
 config/name="PingEm"
+run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+DebugCam="*res://addons/debug_camera/scripts/DebugCamAutoload.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/debug_camera/plugin.cfg", "res://addons/freecam_3D/plugin.cfg", "res://addons/godot_super-wakatime/plugin.cfg")
+
+[input]
+
+ballz={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+3d/default_linear_damp=0.0
+3d/default_angular_damp=0.0
