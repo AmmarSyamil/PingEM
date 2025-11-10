@@ -4,7 +4,7 @@
 bounce = 0.75
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_cbx31"]
-radius = 0.0091393
+radius = 0.0515592
 
 [node name="Ball" type="Node3D"]
 
@@ -18,6 +18,6 @@ continuous_cd = true
 shape = SubResource("SphereShape3D_cbx31")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="RigidBody3D"]
-radius = 0.01
+radius = 0.05
 radial_segments = 30
 rings = 11

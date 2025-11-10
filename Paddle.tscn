@@ -1,20 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://d3dp3tq4ogi3k"]
+[gd_scene load_steps=3 format=3 uid="uid://d3dp3tq4ogi3k"]
 
-[ext_resource type="PackedScene" uid="uid://bueo1j464uf6l" path="res://pingpong/pingpong-Body.gltf" id="1_6vb5h"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6vb5h"]
+[ext_resource type="PackedScene" uid="uid://csuw43urtlp3l" path="res://pingpong/pingpong-Body002.gltf" id="1_6vb5h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6vb5h"]
-size = Vector3(0.0527344, 0.0158691, 0.0416031)
+size = Vector3(0.148438, 0.0186767, 0.158009)
 
-[node name="Paddle" type="RigidBody3D"]
-mass = 0.326
-physics_material_override = SubResource("PhysicsMaterial_6vb5h")
-continuous_cd = true
-
-[node name="pingpong-Body" parent="." instance=ExtResource("1_6vb5h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000321752, -0.00201765, 0.000399038)
+[node name="Paddle" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00306394, -0.0109733)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00166012, -0.069176)
 shape = SubResource("BoxShape3D_6vb5h")
+
+[node name="pingpong-Body002" parent="." instance=ExtResource("1_6vb5h")]
+
+[node name="pingpong-Body003" parent="." instance=ExtResource("1_6vb5h")]
+
+[node name="pingpong-Body004" parent="." instance=ExtResource("1_6vb5h")]

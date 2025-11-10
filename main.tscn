@@ -1,24 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://bx8p7jbykfky8"]
+[gd_scene load_steps=6 format=3 uid="uid://bx8p7jbykfky8"]
 
 [ext_resource type="Script" uid="uid://chjwv840qcdfa" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://2hmabof8d3xy" path="res://ball.tscn" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://bp07fp2syvnn0" path="res://table.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://d3dp3tq4ogi3k" path="res://Paddle.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://buj87cfgq6gyk" path="res://table_baground.tscn" id="5_lquwl"]
 
 [node name="main" type="Node3D"]
 script = ExtResource("1_0xm2m")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.957647, 0.287945, 0, -0.287945, 0.957647, 0.000903487, 0.452467, 1.50101)
+transform = Transform3D(-4.11881e-08, 0.400732, -0.916195, 1.46365e-08, 0.916195, 0.400732, 1, 3.09555e-09, -4.36016e-08, -1.84707, 0.596482, -0.00526906)
+fov = 89.6348
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.488043, 0.87282, 0, -0.87282, -0.488043, 0, 1.93071, -2.08226)
+transform = Transform3D(1, 0, 0, 0, 0.133501, 0.991049, 0, -0.991049, 0.133501, 0.80722, 1.93071, 0.0615265)
 
 [node name="Ball" parent="." instance=ExtResource("3_h2yge")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00678896, 0.532484, -0.0202915)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.08006, 0.349082, 0.0933996)
 
 [node name="Table" parent="." instance=ExtResource("4_1bvp3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0189731, 0)
 
 [node name="Paddle" parent="." instance=ExtResource("4_lquwl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.504653, 0)
+transform = Transform3D(-4.37114e-08, -1, 0, 0, -8.88178e-16, -1, 1, -4.37114e-08, 0, 0, 0.504653, 0)
+
+[node name="TableBaground" parent="." instance=ExtResource("5_lquwl")]
