@@ -13,11 +13,20 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	#print("mambo")
+	var ball_top = ball.get_node("Ball").global_transform.origin
+	var up_dir = ball.get_node("Ball").global_transform.basis.y.normalized()
+	var rotation_veloccity = ball.get_node("Ball").angular_velocity
+	
+	DebugDraw3D.draw_line(ball_top, ball_top + up_dir*0.5, Color.AQUAMARINE, 0.0)
+	
+	print(rotation_veloccity)
 	
 	if Input.is_action_just_pressed("ballz"):
 		#ball.translate(Vector3(0, 1, 0))
 		ball.get_node("Ball").global_position = Vector3(-1,1,0)
 		ball.get_node("Ball").linear_velocity = Vector3(0, 0, 0)
+		#rotation_veloccity = Vector3(0,0,0)
+		ball.get_node("Ball").angular_velocity = Vector3(0,0,0)
 		print("go back")
 	
 	#pass
@@ -37,6 +46,11 @@ func _physics_process(delta: float) -> void:
 	#query.collide_with_bodies = true
 	query.collision_mask = 1 << 1
 	var result = space_state.intersect_ray(query)
+	
+	#Add debug line for the paddle pointing at
+	var forward = paddle.global_transform.basis.y.normalized() * -1
+	var origin = paddle.global_position
+	DebugDraw3D.draw_line(origin, origin + forward * 0.5, Color.AQUAMARINE)
 	
 	#print("sybau")
 	if result.size() > 0:
@@ -80,7 +94,15 @@ func _physics_process(delta: float) -> void:
 		if paddle.velocity.length() > 0.1 and paddle.velocity.length() <0.3:
 			#print("sybau")
 			DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.RED, 4)
+			
+			
 			#make a blob
+			#var pos_hit = ball.get_node("Ball").global_position
+			#var dir_hit = ball.get_node("Ball").global_rotation
+			#DebugDraw3D.draw_line(paddle.global_position, pos_hit + dir_hit * 0.5, Color.AQUAMARINE, 4)
+			#var dir_hit = ball
+			
+			
 		else:
 			pass
 			#print(paddle.velocity)
@@ -95,8 +117,25 @@ func _physics_process(delta: float) -> void:
 			
 			if collider.name == "Ball":
 				print("hit ball", paddle.velocity)
+				DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.BLUE, 4)
+				
+				# See tracjectory
+				var pos_hit = ball.get_node("Ball").global_position
+				#var dir_hit = -ball.get_node("Ball").global_transform.basis.z.normalized()
+				var dir_hit = ball.get_node("Ball").linear_velocity
+				DebugDraw3D.draw_line(pos_hit, pos_hit + dir_hit * 0.1, Color.AQUAMARINE, 4)
+			
 			else:
-				print(collider.name)
+				pass
+				#print(collider.name)
+				
+			# Increase the force fo the paddl to yeet the ball further
+			if collider is RigidBody3D:
+				#print("hit sybau")
+				var push_dir = coll.get_normal() * -1
+				var force = 10
+				
+				collider.apply_central_impulse(push_dir * paddle.velocity.length() )
 
 
 		
