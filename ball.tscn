@@ -8,16 +8,16 @@ radius = 0.0515592
 
 [node name="Ball" type="Node3D"]
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="Ball" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000558197, 2.98023e-08, 0.0014849)
 mass = 0.1
 physics_material_override = SubResource("PhysicsMaterial_cbx31")
 continuous_cd = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball"]
 shape = SubResource("SphereShape3D_cbx31")
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="RigidBody3D"]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Ball"]
 radius = 0.05
 radial_segments = 30
 rings = 11

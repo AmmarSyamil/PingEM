@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://csuw43urtlp3l" path="res://pingpong/pingpong-Body002.gltf" id="1_6vb5h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6vb5h"]
-size = Vector3(0.148438, 0.0186767, 0.158009)
+size = Vector3(0.186523, 0.0186767, 0.169922)
 
 [node name="Paddle" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -15,5 +15,7 @@ shape = SubResource("BoxShape3D_6vb5h")
 [node name="pingpong-Body002" parent="." instance=ExtResource("1_6vb5h")]
 
 [node name="pingpong-Body003" parent="." instance=ExtResource("1_6vb5h")]
+visible = false
 
 [node name="pingpong-Body004" parent="." instance=ExtResource("1_6vb5h")]
+visible = false

@@ -3,7 +3,7 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kokwq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ci1ot"]
-size = Vector3(4.23608, 0.128552, 4.15332)
+size = Vector3(14.2888, 0.128552, 9.84375)
 
 [node name="TableBaground" type="Node3D"]
 

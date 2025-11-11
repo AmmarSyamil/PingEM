@@ -16,8 +16,8 @@ func _process(delta: float) -> void:
 	
 	if Input.is_action_just_pressed("ballz"):
 		#ball.translate(Vector3(0, 1, 0))
-		ball.get_node("RigidBody3D").global_position = Vector3(-1,1,0)
-		ball.get_node("RigidBody3D").linear_velocity = Vector3(0, 0, 0)
+		ball.get_node("Ball").global_position = Vector3(-1,1,0)
+		ball.get_node("Ball").linear_velocity = Vector3(0, 0, 0)
 		print("go back")
 	
 	#pass
@@ -53,12 +53,15 @@ func _physics_process(delta: float) -> void:
 			# Going to the designated plce
 			var dir = (offset_pos - paddle.global_position).normalized()
 			#paddle.apply_central_impulse(dir * 5)
-			paddle.velocity = dir * 5.0
-			paddle.move_and_slide()
 			
-			if paddle.global_position.distance_to(offset_pos) < 0.1:
-				paddle.velocity = Vector3.ZERO
-				
+			paddle.velocity = dir * (pow(paddle.global_position.distance_to(offset_pos),1.1661) * 45.7)
+			paddle.move_and_slide()
+			#print(paddle.global_position.distance_to(offset_pos))
+			
+			#if paddle.global_position.distance_to(offset_pos) < 0.3:
+				#paddle.velocity = Vector3.ZERO
+			#else:
+				#pa/ss
 			# Should be like this but velocuty
 			#paddle.global_position = offset_pos
 			
@@ -73,15 +76,28 @@ func _physics_process(delta: float) -> void:
 			
 		# Detect at rest
 		#print(paddle.linear_velocity)
-		print(paddle.velocity)
-		if paddle.velocity == Vector3(0,0,0):
-			print("sybau")
+		#print(paddle.velocity)
+		if paddle.velocity.length() > 0.1 and paddle.velocity.length() <0.3:
+			#print("sybau")
+			DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.RED, 4)
+			#make a blob
 		else:
-			print(paddle.velocity)
-		#if paddle.linear_velocity == Vector3(0,0,0):
-			#print("chill")
-		#else:
-			#print(paddle.linear_velocity)
+			pass
+			#print(paddle.velocity)
+			
+			
+
+		# Get collision of paddle
+		var paddle_collison = paddle.get_slide_collision_count()
+		for i in range(paddle_collison):
+			var coll = paddle.get_slide_collision(i)
+			var collider = coll.get_collider()
+			
+			if collider.name == "Ball":
+				print("hit ball", paddle.velocity)
+			else:
+				print(collider.name)
+
 
 		
 	pass
