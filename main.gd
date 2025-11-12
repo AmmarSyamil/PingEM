@@ -6,8 +6,10 @@ extends Node3D
 #@onready var 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
-	pass # Replace with function body.
+	#ball.get_node("Ball").body_entered.connect(_ball_coll)
+	paddle.get_node("Collision detect").connect("body_entered", Callable(self, "_ball_coll"))
+	pass 
+	# Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -19,7 +21,7 @@ func _process(delta: float) -> void:
 	
 	DebugDraw3D.draw_line(ball_top, ball_top + up_dir*0.5, Color.AQUAMARINE, 0.0)
 	
-	print(rotation_veloccity)
+	#print(rotation_veloccity)
 	
 	if Input.is_action_just_pressed("ballz"):
 		#ball.translate(Vector3(0, 1, 0))
@@ -53,10 +55,12 @@ func _physics_process(delta: float) -> void:
 	DebugDraw3D.draw_line(origin, origin + forward * 0.5, Color.AQUAMARINE)
 	
 	#print("sybau")
+	# Basic movement using ray and go back a bit
 	if result.size() > 0:
 		
 		var col = result["collider"]
-		#print("Hit:", col.name)
+
+		# For basic movement of the paddle
 		if col is StaticBody3D:
 			#print("H/it at:", result.collider.name)
 			var hit_at = result.position			
@@ -88,55 +92,66 @@ func _physics_process(delta: float) -> void:
 			paddle.rotate_object_local(Vector3.RIGHT, deg_to_rad(90))
 			#paddle.linear_velocity = Vector3(0, 0, 0)
 			
-		# Detect at rest
-		#print(paddle.linear_velocity)
-		#print(paddle.velocity)
-		if paddle.velocity.length() > 0.1 and paddle.velocity.length() <0.3:
-			#print("sybau")
-			DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.RED, 4)
-			
-			
-			#make a blob
-			#var pos_hit = ball.get_node("Ball").global_position
-			#var dir_hit = ball.get_node("Ball").global_rotation
-			#DebugDraw3D.draw_line(paddle.global_position, pos_hit + dir_hit * 0.5, Color.AQUAMARINE, 4)
-			#var dir_hit = ball
-			
-			
-		else:
-			pass
+	# Detect at rest
+	if paddle.velocity.length() > 0.1 and paddle.velocity.length() <0.3:
+		DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.RED, 4)
+	else:
+		pass
 			#print(paddle.velocity)
 			
 			
-
-		# Get collision of paddle
-		var paddle_collison = paddle.get_slide_collision_count()
-		for i in range(paddle_collison):
-			var coll = paddle.get_slide_collision(i)
-			var collider = coll.get_collider()
-			
-			if collider.name == "Ball":
-				print("hit ball", paddle.velocity)
-				DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.BLUE, 4)
-				
-				# See tracjectory
-				var pos_hit = ball.get_node("Ball").global_position
-				#var dir_hit = -ball.get_node("Ball").global_transform.basis.z.normalized()
-				var dir_hit = ball.get_node("Ball").linear_velocity
-				DebugDraw3D.draw_line(pos_hit, pos_hit + dir_hit * 0.1, Color.AQUAMARINE, 4)
-			
-			else:
-				pass
-				#print(collider.name)
-				
-			# Increase the force fo the paddl to yeet the ball further
-			if collider is RigidBody3D:
-				#print("hit sybau")
-				var push_dir = coll.get_normal() * -1
-				var force = 10
-				
-				collider.apply_central_impulse(push_dir * paddle.velocity.length() )
-
-
+	var paddle_collison = paddle.get_slide_collision_count()
+	
+	for i in range(paddle_collison):
+		var coll = paddle.get_slide_collision(i)
+		var collider = coll.get_collider()
 		
+		if collider.name == "Ball":
+			#print("hit ball", paddle.velocity)
+			DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.BLUE, 4)
+		else:
+			pass
+
+			# Increase the force fo the paddl to yeet the ball further
+		if collider is RigidBody3D:
+			#print("hit sybau")
+			var push_dir = coll.get_normal() * -1
+			var force = 10
+				
+			collider.apply_central_impulse(push_dir * paddle.velocity.length() )
+				
+		
+	# Makesure it isnt too fast
+	
+	for i in ["x","y","z"]:
+		var data = ball.get_node("Ball").linear_velocity[i]
+		if data >5:
+			print(i, " to fast")
+			ball.get_node("Ball").linear_velocity[i] = 5
+			pass
+		#pass
+	#if ball.get_node("Ball").linear_velocity.x > 10:
+		#print("nigs too fast", ball.get_node("Ball").linear_velocity)
+		#pass
+	
+	pass
+	
+	
+	
+# Function to detect any colision of the paddle i think
+func _ball_coll(body):
+	ball.get_node("Ball").contact_monitor = true
+	ball.get_node("Ball").max_contacts_reported = 4
+	print(body, "here")
+
+	if body == ball.get_node("Ball"):
+		DebugDraw3D.draw_sphere(ball.get_node("Ball").global_position, 0.01, Color.CYAN, 4)
+		
+		var pos = ball.get_node("Ball").global_position
+		var dir = ball.get_node("Ball").global_rotation
+		DebugDraw3D.draw_line(pos, pos + dir * 0.5, Color.SALMON, 2)
+		
+	else:
+		print("tes")
+	
 	pass
