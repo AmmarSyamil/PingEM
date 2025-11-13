@@ -195,12 +195,14 @@ func handle_ball_coll(ball, paddle, normal):
 		var tangent_dir = tangent_v.normalized()
 		# rotation axis is perpendicular to tangent direction and surface normal:
 		var spin_axis = normal.cross(tangent_dir)
+		var spin_factor = 1
+		
 		if spin_axis.length() > 0.0001:
 			spin_axis = spin_axis.normalized()
 			var updated_angular_v = spin_axis * (tangent_speed / 0.02) * spin_factor
-			ball.angular_velocity = updated_angular_v
+			ball.get_node("Ball").angular_velocity = updated_angular_v
+			#ball.get_node("Ball").angular_velocity = updated_angular_v
 		
-	ball.get_node("Ball").angular_velocity = updated_angular_v
 	
 	
 	
