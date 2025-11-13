@@ -18,6 +18,6 @@ continuous_cd = true
 shape = SubResource("SphereShape3D_cbx31")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="Ball"]
-radius = 0.05
+radius = 0.03
 radial_segments = 30
 rings = 11
