@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bx8p7jbykfky8"]
+[gd_scene load_steps=7 format=3 uid="uid://bx8p7jbykfky8"]
 
 [ext_resource type="Script" uid="uid://chjwv840qcdfa" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://2hmabof8d3xy" path="res://ball.tscn" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://bp07fp2syvnn0" path="res://table.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://d3dp3tq4ogi3k" path="res://Paddle.tscn" id="4_lquwl"]
 [ext_resource type="PackedScene" uid="uid://buj87cfgq6gyk" path="res://table_baground.tscn" id="5_lquwl"]
+[ext_resource type="PackedScene" uid="uid://h66lxh7kf1yd" path="res://wall.tscn" id="6_7mycd"]
 
 [node name="main" type="Node3D"]
 script = ExtResource("1_0xm2m")
@@ -26,3 +27,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0189731, 0)
 transform = Transform3D(-4.37114e-08, -1, 0, 0, -8.88178e-16, -1, 1, -4.37114e-08, 0, 0, 0.504653, 0)
 
 [node name="TableBaground" parent="." instance=ExtResource("5_lquwl")]
+
+[node name="Wall" parent="." instance=ExtResource("6_7mycd")]

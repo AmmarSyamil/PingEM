@@ -19,6 +19,7 @@ func _process(delta: float) -> void:
 	var up_dir = ball.get_node("Ball").global_transform.basis.y.normalized()
 	var rotation_veloccity = ball.get_node("Ball").angular_velocity
 	
+	# Draw line at top of the ball to see the top part of the ball
 	DebugDraw3D.draw_line(ball_top, ball_top + up_dir*0.5, Color.AQUAMARINE, 0.0)
 	
 	#print(rotation_veloccity)
@@ -35,6 +36,7 @@ func _process(delta: float) -> void:
 	
 
 func _physics_process(delta: float) -> void:
+	air_movement()
 	var mouse_pos = get_viewport().get_mouse_position()
 		
 	# Ray 
@@ -76,30 +78,24 @@ func _physics_process(delta: float) -> void:
 			paddle.move_and_slide()
 			#print(paddle.global_position.distance_to(offset_pos))
 			
-			#if paddle.global_position.distance_to(offset_pos) < 0.3:
-				#paddle.velocity = Vector3.ZERO
-			#else:
-				#pa/ss
-			# Should be like this but velocuty
-			#paddle.global_position = offset_pos
-			
-			
-			# Draw ray line
+			# Draw ray line,=, main line of sight
 			DebugDraw3D.draw_line(start_ray, hit_at, Color.RED)
 			
 			# Change the paddle dir/andle so that the front part is allign with the ray 
 			paddle.look_at(hit_at, Vector3.UP)
 			paddle.rotate_object_local(Vector3.RIGHT, deg_to_rad(90))
 			#paddle.linear_velocity = Vector3(0, 0, 0)
-			
-	# Detect at rest
+	
+	
+	
 	if paddle.velocity.length() > 0.1 and paddle.velocity.length() <0.3:
 		DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.RED, 4)
 	else:
 		pass
 			#print(paddle.velocity)
 			
-			
+	
+	# Collision via slide
 	var paddle_collison = paddle.get_slide_collision_count()
 	
 	for i in range(paddle_collison):
@@ -111,18 +107,16 @@ func _physics_process(delta: float) -> void:
 			DebugDraw3D.draw_sphere(paddle.global_position, 0.01, Color.BLUE, 4)
 		else:
 			pass
-
-			# Increase the force fo the paddl to yeet the ball further
-		if collider is RigidBody3D:
-			#print("hit sybau")
-			var push_dir = coll.get_normal() * -1
-			var force = 10
+			
+		### Increase the force fo the paddl to yeet the ball further
+		#if collider is RigidBody3D:
+			##print("hit sybau")
+			#var push_dir = coll.get_normal() * -1
+			#var force = 10
+				#
+			#collider.apply_central_impulse(push_dir * paddle.velocity.length() )
 				
-			collider.apply_central_impulse(push_dir * paddle.velocity.length() )
-				
-		
 	# Makesure it isnt too fast
-	
 	for i in ["x","y","z"]:
 		var data = ball.get_node("Ball").linear_velocity[i]
 		if data >5:
@@ -136,10 +130,17 @@ func _physics_process(delta: float) -> void:
 	
 	pass
 	
+	# detect air collision
+	
 	
 	
 # Function to detect any colision of the paddle i think
 func _ball_coll(body):
+	var pos = ball.get_node("Ball").global_position
+	var vel = ball.get_node("Ball").linear_velocity
+	
+	#var v_normal = normal * vel.dot(normal)
+	
 	ball.get_node("Ball").contact_monitor = true
 	ball.get_node("Ball").max_contacts_reported = 4
 	print(body, "here")
@@ -147,11 +148,73 @@ func _ball_coll(body):
 	if body == ball.get_node("Ball"):
 		DebugDraw3D.draw_sphere(ball.get_node("Ball").global_position, 0.01, Color.CYAN, 4)
 		
-		var pos = ball.get_node("Ball").global_position
-		var dir = ball.get_node("Ball").global_rotation
-		DebugDraw3D.draw_line(pos, pos + dir * 0.5, Color.SALMON, 2)
+		# Find the approximaate direction of the ball after colision with the paddle
+		DebugDraw3D.draw_line(pos, pos + vel * 0.1, Color.SALMON, 2)
+		print("line aproximate runned")
+		
+		# run the handle ball collision function for more precise coliding stuff
+		var normal = -paddle.transform.basis.z.normalized()
+		handle_ball_coll(ball, paddle, normal)
+		
+		
+		
 		
 	else:
 		print("tes")
+	
+	pass
+	
+	
+# Function to handle all coollision whatsoever, so the physict will al be in hear like hte bouncy part you know it
+func handle_ball_coll(ball, paddle, normal):
+	
+	var ball_v = ball.get_node("Ball").linear_velocity
+	var paddle_v = paddle.velocity
+	
+	# v = normal + tangent 
+	var normal_v = normal * ball_v.dot(normal)
+	var tangent_v = ball_v - normal_v
+	
+	var restitution = 1
+	var friction = 0.8
+	var update_v = (-normal_v * restitution) + (tangent_v * friction)
+	
+	update_v += paddle_v * 0.5
+	
+	var max_speed = 10
+	if update_v.length() > max_speed:
+		update_v = update_v.normalized() * max_speed
+		
+	ball.get_node("Ball").linear_velocity = update_v
+	
+	# spin effect
+	
+	var tangent_speed = tangent_v.length()
+	var spin_dir = tangent_v.normalized()
+	if tangent_v.length() > 0.0001:
+		var tangent_dir = tangent_v.normalized()
+		# rotation axis is perpendicular to tangent direction and surface normal:
+		var spin_axis = normal.cross(tangent_dir)
+		if spin_axis.length() > 0.0001:
+			spin_axis = spin_axis.normalized()
+			var updated_angular_v = spin_axis * (tangent_speed / 0.02) * spin_factor
+			ball.angular_velocity = updated_angular_v
+		
+	ball.get_node("Ball").angular_velocity = updated_angular_v
+	
+	
+	
+	pass
+	
+func air_movement():
+	var C_d = 2 # drag coefisciesnt
+	var k_m = 2 # magnus coeficient
+	var v = ball.get_node("Ball").linear_velocity
+	
+	var F_drag = -C_d * v.length() * v
+	var F_magnus = k_m * ball.get_node("Ball").angular_velocity.cross(ball.get_node("Ball").linear_velocity)
+	var updated = (F_drag + F_magnus)
+	
+	ball.get_node("Ball").apply_central_force(updated)
 	
 	pass
